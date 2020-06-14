@@ -1,0 +1,88 @@
+Turbo Assembler	 Version 2.02	     26/12/19 12:50:26	    Page 1
+vl2.asm
+
+
+
+      1	    0000			 model small
+      2	    0000			 .stack	100h
+      3					 .386
+      4	    0000			 .data
+      5	    0000  76 6C	61 73 6F 76 2E+		 path db 'vlasov.txt'
+      6		  74 78	74
+      7	    000A  ??				 temp db ?
+      8	    000B  0000				 descriptor dw 0
+      9	    000D			 .code
+     10	    0000			 start:
+     11	    0000  B8 0000s			 mov ax, @data
+     12	    0003  8E D8				 mov ds, ax
+     13
+     14	    0005  B4 3D				 mov ah, 3dh
+     15	    0007  B0 00				 mov al, 0
+     16	    0009  BA 0000r			 mov dx, OFFSET	path
+     17	    000C  CD 21				 int 21h
+     18
+     19	    000E  A3 000Br			 mov descriptor, ax
+     20	    0011  B4 3F				 mov ah, 3Fh
+     21	    0013  8B 1E	000Br			 mov bx, descriptor
+     22	    0017  BA 000Ar			 mov dx, OFFSET	temp
+     23	    001A  CD 21				 int 21h
+     24
+     25	    001C  B8 0003			 mov ax, 03h
+     26	    001F  CD 10				 int 10h
+     27
+     28	    0021  33 F6				 xor si,si
+     29	    0023  33 FF				 xor di,di
+     30
+     31	    0025  B8 B800			 mov ax, 0B800h
+     32	    0028  8E C0				 mov es, ax
+     33
+     34	    002A  B9 001C			 mov cx, 28
+     35	    002D				 cycle:
+     36	    002D  8A 84	000Ar				 mov al, temp[si]
+     37	    0031  26: 88 05				 mov es: [di], al
+     38	    0034  47					 inc di
+     39	    0035  B4 02					 mov ah, 010b
+     40	    0037  26: 88 25				 mov es: [di], ah
+     41	    003A  47					 inc di
+     42	    003B  46					 inc si
+     43	    003C  E2 EF					 loop cycle
+     44
+     45	    003E  B4 00				 mov ah,0
+     46	    0040  CD 16				 int 16h
+     47	    0042  B8 4C00			 mov ax, 4C00h
+     48	    0045  CD 21				 int 21h
+     49					 end start
+Turbo Assembler	 Version 2.02	     26/12/19 12:50:26	    Page 2
+Symbol Table
+
+
+
+
+Symbol Name			  Type	 Value
+
+??DATE				  Text	 "26/12/19"
+??FILENAME			  Text	 "vl2	  "
+??TIME				  Text	 "12:50:26"
+??VERSION			  Number 0202
+@CODE				  Text	 _TEXT
+@CODESIZE			  Text	 0
+@CPU				  Text	 0D0FH
+@CURSEG				  Text	 _TEXT
+@DATA				  Text	 DGROUP
+@DATASIZE			  Text	 0
+@FILENAME			  Text	 VL2
+@MODEL				  Text	 2
+@WORDSIZE			  Text	 2
+CYCLE				  Near	 _TEXT:002D
+DESCRIPTOR			  Word	 DGROUP:000B
+PATH				  Byte	 DGROUP:0000
+START				  Near	 _TEXT:0000
+TEMP				  Byte	 DGROUP:000A
+
+Groups & Segments		  Bit Size Align  Combine Class
+
+DGROUP				  Group
+  STACK				  16  0100 Para	  Stack	  STACK
+  _DATA				  16  000D Word	  Public  DATA
+_TEXT				  16  0047 Word	  Public  CODE
+
